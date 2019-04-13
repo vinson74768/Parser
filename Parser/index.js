@@ -25,7 +25,6 @@ Component({
     'nodes': [],
   },
   attached() {
-    console.log(this.properties)
     this.setData({
       space: this.properties.space
     })

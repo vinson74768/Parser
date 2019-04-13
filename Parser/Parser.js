@@ -132,7 +132,7 @@ Parser.prototype.onopentagend = function() {
     this._cbs.onopentag(this._tagname, this._attribs);
     this._attribs = null;
   }
-  if (this._cbs.onclosetag && this._tagname in voidElements) {
+  if (this._tagname in voidElements) {
     this._cbs.onclosetag(this._tagname);
   }
   this._tagname = "";
@@ -149,7 +149,7 @@ Parser.prototype.onclosetag = function(name) {
       this.onopentagname(name);
       this._closeCurrentTag();
     }
-  } else if ((name === "br" || name === "p")) {
+  } else if (name === "br" || name === "p") {
     this.onopentagname(name);
     this._closeCurrentTag();
   }
@@ -177,7 +177,6 @@ Parser.prototype.onattribdata = function(value) {
 };
 
 Parser.prototype.onattribend = function() {
-  if (this._cbs.onattribute) this._cbs.onattribute(this._attribname, this._attribvalue);
   if (
     this._attribs &&
     !Object.prototype.hasOwnProperty.call(this._attribs, this._attribname)

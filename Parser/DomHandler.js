@@ -51,9 +51,7 @@ DomHandler.prototype.onclosetag = function(name) {
     }
   }
   if (name != 'html' && name != 'body') {
-    var elem = this._tagStack.pop();
-    if (elem.name != name && name != 'font' && name != 'section') console.warn("Tagname didn't match!");
-    if (this._elementCB) this._elementCB(elem);
+    this._tagStack.pop();
   }
 };
 
