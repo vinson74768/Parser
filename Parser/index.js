@@ -25,6 +25,7 @@ Component({
     'nodes': [],
   },
   attached() {
+    console.log(this.properties)
     this.setData({
       space: this.properties.space
     })
@@ -33,7 +34,7 @@ Component({
     'html': function(html) {
       if (typeof html == 'string') {
         var that = this;
-        html2nodes(html).then(function(e) {
+        html2nodes(html,this.properties.preview).then(function(e) {
           that.triggerEvent('parse', e)
           imgList = e.imgList;
           that.setData({

@@ -1,7 +1,8 @@
-function DomHandler(style) {
+function DomHandler(style,options) {
   this._style = ParseClass(style);
   this.imgList = [];
   this.dom = [];
+  this._preview=options;
   this._done = false;
   this._tagStack = [];
   this._parser = this._parser || null;
@@ -44,7 +45,7 @@ DomHandler.prototype.onend = function() {
 };
 
 DomHandler.prototype.onclosetag = function(name) {
-  if (name == 'img' || name == 'video' || name == 'a') {
+  if ((name == 'img'&&this._preview) || name == 'video' || name == 'a') {
     for (var item of this._tagStack) {
       item.continue = true;
     }
@@ -86,6 +87,9 @@ DomHandler.prototype.onopentag = function(name, attrs) {
     if (!properties.attrs.style) properties.attrs.style = '';
     if (properties.attrs.color) properties.attrs.style += (';color:' + properties.attrs.color);
     if (properties.attrs.face) properties.attrs.style += (';font-family:' + properties.attrs.falce);
+  }else if(name=='a'){
+    if (!properties.attrs.style) properties.attrs.style = '';
+    properties.attrs.style +=';text-decoration: underline;color:#0000ff';
   }
   if (name != 'html' && name != 'body') {
     var element = properties;

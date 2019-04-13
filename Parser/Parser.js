@@ -233,7 +233,7 @@ Parser.prototype.resume = function() {
 Parser.prototype.parseChunk = Parser.prototype.write;
 Parser.prototype.done = Parser.prototype.end;
 
-function html2nodes(data) {
+function html2nodes(data,options) {
   return new Promise(function(resolve, reject) {
     data = data.replace(/<!--[\s\S]*?-->/g, ''); //删除注释
     data = data.replace(/<!\[CDATA\[[\s\S]*?\]\]>/gi, ''); //删除CDATA
@@ -244,7 +244,7 @@ function html2nodes(data) {
       return '';
     }); //处理style
     data = data.replace(/<head[\s\S]*?<\/head>/gi, ''); //删除head
-    var handler = new DomHandler(style);
+    var handler = new DomHandler(style,options);
     new Parser(handler).end(data);
     resolve({
       'nodes': handler.dom,

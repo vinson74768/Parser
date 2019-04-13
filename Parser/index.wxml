@@ -7,7 +7,9 @@
   <image src='{{item.attrs.src}}' mode='widthFix' style="{{item.attrs.style+item.attrs.width?(';width:'+item.attrs.width):''+item.attrs.height?('height:'+item.attrs.height):''}}" data-src='{{item.attrs.src}}' bindtap='previewImg' />
 </template>
 <template name='a'>
-  <text style='{{item.attrs.style}}' style='text-decoration: underline;color:#0000ff;' data-href='{{item.attrs.href}}' bindlongpress='copyhref'>{{item.children[0].text}}</text>
+  <scroll-view scroll-x>
+    <rich-text nodes='{{[item]}}' data-href='{{item.attrs.href}}' bindlongpress='copyhref' />
+  </scroll-view>
 </template>
 <template name='rich-text'>
   <scroll-view scroll-x scroll-y>
