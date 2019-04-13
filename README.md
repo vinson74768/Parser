@@ -20,7 +20,7 @@
   ![解析style](http://bmob-cdn-17111.b0.upaiyun.com/2019/04/13/770976cd40270fb380ba92d3c81488e8.png)  
 
 - 支持的标签种类丰富，包括`视频`、`表格`等  
-  在`rich-text`组件的基础上增加支持以下标签: 
+  在[`rich-text`组件的基础](https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html)上增加支持以下标签: 
   
   | 标签 | 属性 |
   |:---:|:---:|
@@ -98,7 +98,7 @@
   
   - html格式：
     1. `string`类型：一个`html`字符串，例如：`<div>Hello World!</div>`
-    2. `object`类型：一个形如`{ nodes:[],imgList:[] }`的结构体，其中nodes数组的格式同[rich-text](https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html), imgList为其中所有图片地址的数组（回调函数`bindparser`的返回值就是这样的结构体）
+    2. `object`类型：一个形如`{ nodes:[Array],imgList:[Array] }`的结构体，其中nodes数组的格式同[rich-text](https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html), imgList为其中所有图片地址的数组（回调函数`bindparser`的返回值就是这样的结构体）
     3. `array`类型：格式要求同[rich-text](https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html)（用此格式传入预览图片时，将`不能`通过左右滑动查看所有图片）  
     4. 使用b, c方法可以节省解析的时间，提高性能
   - space格式（同[rich-text](https://developers.weixin.qq.com/miniprogram/dev/component/rich-text.html)）：
@@ -114,5 +114,40 @@
     |:----:|:----:|:----:|
     | bindparser | 在解析完成时调用（仅当传入的html为`字符串`时会调用） | 返回一个`object`, 其中`nodes`为解析后的节点数组， `imgList`为图片列表，该object可以在下次调用直接作为html属性的值，节省解析的时间  
     
+## 后端解析 ##
+为提高页面性能，可以在服务器端提前解析好`html`，该插件同样可以在`node.js`中使用（只需要`DomHandler.js`, `Parser.js`, `Tokenizer.js`即可）  
+具有的功能：
+1. 删除`script`, `head`, `html`, `body`, 注释等无用的标签
+2. 将`style`标签中的样式解析到各标签的`style`中，例如：
+``` javascript
+const Parser=require('./Parser.js');
+var html='<style>.demo{text-align:center}</style><div class="demo">Hello World!</div>';
+Parser(html).then(function(e){
+  console.log(e)
+})
+
+```
+``` json
+{ 
+  "nodes": [{ 
+    "name": "div", 
+    "attrs": {
+      "class": "demo",
+      "style": "text-align:center"
+    }, 
+    "children": [{ 
+      "text": "Hello World!", 
+      "type": "text" 
+    }] 
+  }],
+  "imgList": [] 
+}
+```
+3. 在`img`组件的`style`中添加`max-width:100%;`，实现宽度自适应
+4. 将`section`标签用`div`取代
+5. 将`font`标签用`label`取代，并将`face`, `color`属性解析到`style`中
+6. 对于该节点下含有`a`, `img`, `video`标签的，`continue`的值会被设置为`true`（用于前端显示）
+7. 解析完成将返回一个形如`{ nodes:[Array], imgList:[Array] }`结构体,其中`nodes`数组可以直接应用于`rich-text`组件，整个结构体可以直接作为`Parser`组件的参数
+
 ## 原理简介 ##
-  该插件结合了`WxParse`中模板循环的方式和`rich-text`组件，对于节点下有`img`, `video`, `a`标签的，使用模板循环的方式显示，否则直接通过`rich-text`组件显示，这样既解决了`WxParse`中过多的标签数（`rich-text`可以节省大量的标签），层数容易不够（对于大于20层的直接用`rich-text`解析，理论上可以显示无限层级），无法解析表格，一些组件显示格式不正确（`rich-text`可以解析出更好的效果）等缺点；也弥补了`rich-text`图片无法预览，无法显示视频，无法复制链接，部分标签不支持（在解析过程中进行替换）等缺点，另外该解析脚本还减小了包的大小，提高了解析效率，通过包装成一个自定义组件，简单易用且功能强大。
+&emsp;&emsp;该插件结合了`WxParse`中模板循环的方式和`rich-text`组件，对于节点下有`img`, `video`, `a`标签的，使用模板循环的方式显示，否则直接通过`rich-text`组件显示，这样既解决了`WxParse`中过多的标签数（`rich-text`可以节省大量的标签），层数容易不够（对于大于20层的直接用`rich-text`解析，理论上可以显示无限层级），无法解析表格，一些组件显示格式不正确（`rich-text`可以解析出更好的效果）等缺点；也弥补了`rich-text`图片无法预览，无法显示视频，无法复制链接，部分标签不支持（在解析过程中进行替换）等缺点，另外该解析脚本还减小了包的大小，提高了解析效率，通过包装成一个自定义组件，简单易用且功能强大。
