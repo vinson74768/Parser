@@ -239,7 +239,7 @@ function html2nodes(data) {
     data = data.replace(/<!\[CDATA\[[\s\S]*?\]\]>/gi, ''); //删除CDATA
     data = data.replace(/<script[\s\S]*?<\/script>/gi, ''); //删除脚本
     var style;
-    data.replace(/<style.*?>([\s\S]*?)<\/style>/i,function(){
+    data = data.replace(/<style.*?>([\s\S]*?)<\/style>/i,function(){
       style = arguments[1];
       return '';
     }); //处理style
