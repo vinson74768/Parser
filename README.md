@@ -57,7 +57,11 @@
  
 - 功能强大，支持无限层级，解析速度快，包大小仅约`40KB`  
 ## 使用方法 ##
+<<<<<<< HEAD
 [代码片段](https://developers.weixin.qq.com/s/GqglRBmS7r7O)
+=======
+[代码片段](https://developers.weixin.qq.com/s/u9pVxBmh7N7H)
+>>>>>>> 111d5a3e2042dac3b3a7f31619b5d4ebcd20337e
 1. 下载Parser文件夹至小程序目录  
    ![目录结构](http://bmob-cdn-17111.b0.upaiyun.com/2019/04/13/3ba7b37540c9e34c80eb97bbf9d8099b.png)
 2. 在需要引用的页面的`json`文件中添加
