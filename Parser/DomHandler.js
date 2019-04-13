@@ -2,7 +2,8 @@ function DomHandler(style,options) {
   this._style = ParseClass(style);
   this.imgList = [];
   this.dom = [];
-  this._preview=options;
+  this._preview = options ? options.preview : true;
+  this._selectable = options ? options.selectable : true;
   this._done = false;
   this._tagStack = [];
   this._parser = this._parser || null;
@@ -45,7 +46,7 @@ DomHandler.prototype.onend = function() {
 };
 
 DomHandler.prototype.onclosetag = function(name) {
-  if ((name == 'img'&&this._preview) || name == 'video' || name == 'a') {
+  if ((name == 'img'&&this._preview) || name == 'video' || (name == 'a'&&this._selectable)) {
     for (var item of this._tagStack) {
       item.continue = true;
     }

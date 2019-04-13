@@ -33,7 +33,10 @@ Component({
     'html': function(html) {
       if (typeof html == 'string') {
         var that = this;
-        html2nodes(html,this.properties.preview).then(function(e) {
+        html2nodes(html, {
+          "preview": this.properties.preview,
+          "selectable": this.properties.selectable
+        }).then(function(e) {
           that.triggerEvent('parse', e)
           imgList = e.imgList;
           that.setData({
